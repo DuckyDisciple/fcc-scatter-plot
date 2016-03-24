@@ -1,5 +1,5 @@
 var url = "https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
-var margin = {top:20,right:20,bottom:30,left:50};
+var margin = {top:20,right:20,bottom:45,left:75};
 var w = 650-margin.left-margin.right;
 var h = 400-margin.top-margin.bottom;
 
@@ -28,13 +28,13 @@ $(document).ready(function(){
       .attr("transform","translate("+margin.left+","+margin.top+")");
     
     svg.append("g")
-      .attr("class", "axis")
+      .attr("class", "x axis")
       .attr("transform","translate(0,"+h+")")
       .call(xAxis)
      .append("text")
       .attr("class","label")
       .attr("x",w/2)
-      .attr("y",-6)
+      .attr("y",40)
       .style("text-anchor", "end")
       .text("Year");
     
@@ -43,10 +43,11 @@ $(document).ready(function(){
       .call(yAxis)
      .append("text")
       .attr("class","label")
-      .attr("x",-6)
-      .attr("y",h/2)
+      .attr("dy","0.71em")
+      .attr("y",-65)
+      .attr("x",-h/2)
       .style("text-anchor","end")
-      .attr("transform","rotate(90)")
+      .attr("transform","rotate(-90)")
       .text("Seconds");
     
     var graph = svg.selectAll("circle")
@@ -55,6 +56,19 @@ $(document).ready(function(){
       .append("circle")
       .attr("r", "3px")
       .attr("cx", xMap)
-      .attr("cy", yMap);
+      .attr("cy", yMap)
+      .on("mouseover",function(d){
+        return tooltip.classed("hide",false)
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top", (d3.event.pageY - 50) + "px")
+          .text(d.Name+"\nYear: "+d.Year+"\nTime: "+d.Time);
+      })
+      .on("mouseout", function(){
+        return tooltip.classed("hide",true);
+      });
   });
 });
+
+var tooltip = d3.select("body")
+  .append("div")
+  .attr("class", "tip hide");
